@@ -45,13 +45,13 @@ URL-only Random Forest (the model used by the app), 97 features, held-out test s
 |---|---|---|---|---|
 | 0.928 | 0.902 | 0.903 | 0.903 | 0.976 |
 
-Baseline comparison (`results/model_comparison.csv`):
+Model comparison on the same 97 URL features and the same split (`results/url_only_model_comparison.csv`):
 
 | Model | Accuracy | Precision | Recall | F1 | ROC-AUC |
 |---|---|---|---|---|---|
-| Logistic Regression | 0.931 | 0.890 | 0.915 | 0.902 | 0.979 |
-| Random Forest | 0.971 | 0.955 | 0.960 | 0.958 | 0.995 |
-| Linear SVM | 0.930 | 0.883 | 0.919 | 0.900 | 0.979 |
+| Logistic Regression | 0.897 | 0.859 | 0.865 | 0.862 | 0.965 |
+| Random Forest | 0.928 | 0.902 | 0.903 | 0.903 | 0.976 |
+| Linear SVM | 0.898 | 0.855 | 0.872 | 0.863 | 0.964 |
 
 Automated tests: 12 of 12 passing (`python -m pytest tests -v`).
 
