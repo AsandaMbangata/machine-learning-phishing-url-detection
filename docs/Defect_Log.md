@@ -1,0 +1,11 @@
+# Defect Log: Phishing URL Detection Prototype
+
+| ID | Found in | Symptom | Root cause | Action | Retest result | Status |
+|----|----------|---------|-----------|--------|---------------|--------|
+| D-001 | Manual test of the Streamlit app | `https://example.com/login` scored 86.7% phishing although the rule-based checks showed only 1 of 8 warnings | `url_feature_extractor.py` encoded absent URL components (directory, file, query) as `0`. In `dataset_full.csv` every feature of an absent component is `-1` (verified: 47,509 rows for directory/file, 81,225 rows for params, all columns `-1`). | Extractor rewritten to emit `-1` for absent components and to count URL-level features without the scheme. | `google.com` 1.2% phishing; fake PayPal URL 97.3% phishing. | Fixed |
+| D-002 | `tests/run_evidence.py` and dataset check | `example.com/login` still scored 70.0%. A check on the dataset found no rows matching the extractor's directory/file split. | The extractor split the path at the last slash. In the dataset, "directory" is the whole path and "file" is its last segment (verified on 13,522 single-slash rows: directory length = file length + 1 in 100%). | Extractor changed to `directory = path`, `file = last segment`. Unit test expectation updated. | 12/12 pytest tests pass. `wikipedia.org/wiki/Phishing` fell from 0.354 to 0.000. | Fixed |
+| D-003 | `tests/run_evidence.py` | `https://example.com/login` scores 1.000 (false positive) | Dataset bias, not a code fault: of 302 training rows with the same shape (one slash, directory length 6, file length 5, no query, URL length 25 or less), 89.7% are phishing. The model uses URL structure only and cannot see the domain's reputation or the page. | Not fixed. Documented as a known limitation. Real login pages (e.g. github.com/login) added to the validation set to measure how often this occurs. | Open: results in `results/url_validation_results.csv` | Accepted limitation |
+
+## Notes
+- Extractor conventions were inferred from patterns in the dataset, not from the original generator code, so an exact match with the original cannot be claimed.
+- Evidence screenshots: before D-001 fix (86.7%), after (google.com 1.2%, fake PayPal 97.3%), pytest output (12 passed), `run_evidence.py` output.

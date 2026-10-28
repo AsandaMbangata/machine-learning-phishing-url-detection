@@ -1,0 +1,5 @@
+url,true,pred,p_phishing,result
+https://www.google.com,0,0,0.012,PASS
+https://example.com/login,0,1,1.0,FAIL
+https://en.wikipedia.org/wiki/Phishing,0,0,0.0,PASS
+http://secure-login-paypal.verify-account.xyz/update?id=1,1,1,0.92,PASS
